@@ -1,0 +1,589 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Galería de Arte Contemporáneo | Indigo Gallery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d946ef",
+                        "brand-pink": "#ec4899",
+                        "background-light": "#101022",
+                        "background-dark": "#050510",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.2s ease-out forwards',
+                        'fade-up': 'fadeUp 1s ease-out forwards',
+                        'pulse-subtle': 'pulseSubtle 2s infinite',
+                        'floating': 'floating 6s ease-in-out infinite',
+                        'swim-natural': 'swimNatural 25s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseSubtle: {
+                            '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(217, 70, 239, 0.4)' },
+                            '50%': { transform: 'scale(1.02)', boxShadow: '0 0 0 10px rgba(217, 70, 239, 0)' },
+                        },
+                        swimNatural: {
+                            '0%': { transform: 'translate(-20vw, 20vh) rotate(5deg) scaleX(1)' },
+                            '25%': { transform: 'translate(40vw, 10vh) rotate(-5deg) scaleX(1)' },
+                            '50%': { transform: 'translate(110vw, 40vh) rotate(0deg) scaleX(1)' },
+                            '51%': { transform: 'translate(110vw, 40vh) rotate(0deg) scaleX(-1)' },
+                            '75%': { transform: 'translate(40vw, 70vh) rotate(5deg) scaleX(-1)' },
+                            '99%': { transform: 'translate(-20vw, 20vh) rotate(-5deg) scaleX(-1)' },
+                            '100%': { transform: 'translate(-20vw, 20vh) rotate(5deg) scaleX(1)' }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+            scroll-behavior: smooth;
+            background: linear-gradient(135deg, #1e0b2a 0%, #0a0515 100%);
+            background-attachment: fixed;
+        }
+        .art-carousel {
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .art-card-snap {
+            scroll-snap-align: start;
+            flex: 0 0 calc(100% - 32px);
+        }
+        @media (min-width: 640px) {
+            .art-card-snap {
+                flex: 0 0 calc(50% - 24px);
+            }
+        }
+        @media (min-width: 1024px) {
+            .art-card-snap {
+                flex: 0 0 calc(33.333% - 21.3px);
+            }
+        }
+        .chromatic-ocean {
+            background: radial-gradient(circle at 50% 50%, #1e0b2a 0%, #0a0515 70%, #000000 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .chromatic-ocean::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.12) 0%, transparent 40%, rgba(147, 51, 234, 0.12) 100%);
+            pointer-events: none;
+        }
+        .category-section:not(:last-of-type) {
+            border-bottom: 1px solid rgba(217, 70, 239, 0.1);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-display text-white antialiased">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 bg-black/40 backdrop-blur-md border-b border-white/10">
+<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="">palette</span>
+<h1 class="text-xl font-extrabold tracking-tight text-white" style="">BYArt</h1>
+</div>
+<nav class="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest">
+<a class="hover:text-primary transition-colors text-white" href="#" style="">Inicio</a>
+<a class="hover:text-primary transition-colors text-white" href="#servicios" style="">Servicios</a>
+<a class="hover:text-primary transition-colors text-white" href="#obras" style="">Colección</a>
+<a class="hover:text-primary transition-colors text-white" href="#artista" style="">El Artista</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/10 rounded-full transition-colors text-white" style="">
+<span class="material-symbols-outlined" style="">search</span>
+</button>
+<button class="p-2 hover:bg-white/10 rounded-full transition-colors md:hidden text-white" style="">
+<span class="material-symbols-outlined" style="">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[85vh] @container overflow-hidden chromatic-ocean">
+<!-- Fantasy Fish Animation Layer -->
+<div class="absolute inset-0 z-0 pointer-events-none">
+<div class="absolute w-[100px] h-[100px] md:w-[150px] md:h-[150px] animate-swim-natural mix-blend-screen opacity-80">
+<img alt="Fantasy Fish" class="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,105,180,0.6)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEoTjKnnUqqKoIxOSiKXZoTlj2sHPITZBXSEVFuIAfi6TGO6fcXMrBsH_VDu7TjWiOf-J829wDq4qDltqpNNWtazemFpWgM4oiuJABB3btZJT6Tu1e0kL-IBieDGu9br5a4xLMHwEbKzpIMzVsX448UIO0xGI7ud_25zGWeGfgQsRW8cFXwUdAcBie9r77CIT1d7dHJY9D2QAU8IHHcIGee6EizXyfi8FcG9XNqeXTuqQrZ435_mfWVQNRkxddC17bAQGW8pH1dEc" style="">
+<div class="absolute inset-0 bg-pink-500/15 blur-3xl rounded-full scale-150"></div>
+</div>
+</div>
+<!-- Background depth layers -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col items-center justify-center text-center">
+<span class="text-pink-300 uppercase tracking-[0.4em] mb-4 text-sm font-semibold animate-fade-up" style="opacity: 0;">Exhibición Virtual 2026</span>
+<h2 class="text-white text-5xl md:text-7xl font-black leading-tight mb-6 max-w-4xl animate-fade-up" style="opacity: 0;">
+                    Galería de Arte Contemporáneo
+                </h2>
+<p class="text-white/80 text-lg md:text-xl max-w-2xl mb-10 font-light leading-relaxed animate-fade-up" style="opacity: 0;">
+                    Explora una atmósfera cromática profunda. Descubre piezas únicas que transforman espacios y elevan el alma.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 animate-fade-up" style="animation-delay: 0.8s; opacity: 0;">
+<a class="bg-primary hover:bg-brand-pink text-white px-10 py-4 rounded-lg font-bold transition-all transform hover:scale-105 shadow-xl shadow-primary/40 text-center" href="#obras" style="">
+                        Ver Colección
+                    </a>
+<a class="bg-white/5 hover:bg-white/10 text-white backdrop-blur-md px-10 py-4 rounded-lg font-bold transition-all border border-white/20 text-center" href="#artista" style="">
+                        Conoce al Artista
+                    </a>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="py-24 bg-black/20" id="servicios">
+<div class="max-w-7xl mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-black text-white mb-4 uppercase tracking-tight" style="">Nuestros Servicios</h2>
+<div class="h-1.5 w-24 bg-primary mx-auto rounded-full"></div>
+<p class="mt-6 text-white/70 max-w-2xl mx-auto text-lg" style="">Ofrecemos arte personalizado y piezas exclusivas diseñadas para capturar momentos y emociones únicas.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="group p-8 rounded-xl border border-white/10 bg-white/5 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+<div class="w-14 h-14 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">brush</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-white" style="">Cuadros por Encargo</h3>
+<p class="text-white/70 leading-relaxed" style="">Obras creadas a medida según tu visión, paleta de colores y el espacio específico que desees transformar.</p>
+</div>
+<div class="group p-8 rounded-xl border border-white/10 bg-white/5 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+<div class="w-14 h-14 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">face</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-white" style="">Transformación de Estilos</h3>
+<p class="text-white/70 leading-relaxed" style="">¿Tienes un dibujo a lápiz? Puedo recrearlo para ti en una versión al óleo, acuarela o en un estilo abstracto único.</p>
+</div>
+<div class="group p-8 rounded-xl border border-white/10 bg-white/5 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+<div class="w-14 h-14 bg-primary/20 text-primary rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">dashboard_customize</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-white" style="">Asesoría de Arte</h3>
+<p class="text-white/70 leading-relaxed" style="">Te ayudamos a elegir la pieza perfecta que armonice con tu decoración y transmita tu personalidad.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Catalogue Section -->
+<section class="py-24" id="obras">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h2 class="text-3xl md:text-4xl font-black text-white mb-2 uppercase tracking-tight" style="">Catálogo de Obras</h2>
+<p class="text-white/70" style="">Explora nuestra colección de acuarelas y técnicas mixtas.</p>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+<a class="px-6 py-2 bg-white/10 text-white rounded-full text-sm font-bold whitespace-nowrap cursor-pointer hover:bg-primary transition-colors" href="#cat-acuarelas" style="">Acuarelas</a>
+<a class="px-6 py-2 bg-white/10 text-white rounded-full text-sm font-bold whitespace-nowrap cursor-pointer hover:bg-primary transition-colors" href="#cat-lapiz" style="">Lápiz y Lapicero</a>
+<a class="px-6 py-2 bg-primary text-white rounded-full text-sm font-bold whitespace-nowrap cursor-pointer hover:bg-brand-pink transition-colors" href="#cat-oleo" style="">Colección Óleo</a>
+</div>
+</div>
+<!-- Category: Acuarelas -->
+<div class="category-section py-12 relative" id="cat-acuarelas">
+<div class="flex items-center gap-4 mb-10">
+<div class="h-px flex-grow bg-white/10"></div>
+<h3 class="text-2xl font-black text-primary uppercase tracking-widest" style="">Colección Acuarelas</h3>
+<div class="h-px flex-grow bg-white/10"></div>
+</div>
+<div class="relative group">
+<div class="art-carousel flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-4 -mx-4 items-stretch">
+<!-- Artwork 1: Sweet Splendor -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Sweet Splendor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ugQTXYXT8jzaz4J6uAa-tYBX3lTuxy0_5Qt0sQdct0qfAU0RfOHfzNjJh8Lu0HRxUDITM2Xk690BnZHOo3Qtln2eUpGVYcnc4RJmHZxV15_UGDOG_j5bghgWo6BGhR4fZTfTJJlKnQkJCxJWZgHy45LLcan1Bm5MbJl1OJ371j0TlNs_dCLSqt_9Lld_Vxekz7eUk_5dhUJ3ddBJ4mZEXEXC4MAI7uEdAVl7kagbtAP-GbCgRPfhdt580W3q4bJV1x9Fx66fy5A" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Sweet Splendor</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Acuarela sobre papel Arches</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$30.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+<!-- Artwork 2: The Golden Pollinator -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="The Golden Pollinator" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0uiOc8C6ij4ZsrQlJX38rcDfLQPwf8Ufihd7r_fs2BVJVNg6JY0la6rsmzCf_fhptki7rznje_cPYUTwFYg0fE_H1rIN_jHeGA-yAaZZ3JCx1sUfc-hx1W8Qp1LymuV0a1cn-MBDKxnGJDO-kPMuTK7W4yotcn3CPWqe1NKTh9J-z9_Q7rcAbmCP5mrDPMsjrvuSytkmNYTeZrFVW3zyW4pap98Gt1PO5iyjZbL9FESw9arpsB9xqO2AEkDrKzOJ6blhWbwH0t16" style="">
+<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-white" style="">Original</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">The Golden Pollinator</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Acuarela sobre papel Arches</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$40.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+<!-- Artwork 3: Mirada de Color -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Mirada de Color" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ujpH4RracUgi13_qMEH-Zpwi-MBajRl-zN8NsrvH9fiUeqo7nvGjiiMdrFK9Cx7qUugpk_mP0QpX9Qr9WBWdZiwPkxLjcbfMoDQdly0ovWlft9RuB3Avk3LtBDufyeU48HphouienKpapBYOLM7rK2owGVjrPGAwIFM4lnMyuN7NyX9y747pLeOjTowKIWxcY3I6fNBguWc6pjSNsERf-RQ_MZubI5KgPCGRG0nzOXrmnPrxoElyzc5A703ko8wb6e-r2Dw3DML8A" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Mirada de Color</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Acuarela contemporánea sobre papel</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$30.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+<!-- Artwork 4: Rostro Abstracto -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Rostro Abstracto" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ujgiGu1OerxfAd0SlSeuWo4J9RTtRND_2vRls7tMo__phmcSIwiv4KmaiBeT78oYEmorfQiAljKaqgDEbjBxAnR3TIuu3VTjiqh1muDeV9AfPlEgKF4CRZozJZGPk49Yr6Htg2j0YB8OOqOLAfVaICG1xpKbKSIvfeNFMdWNFhEqEelD3fm0vdms9AoW8Ni2k0rmnw0wUF5UShTB1z1kzXrEYnoH5uFMdLCZK77XYf7jZ_3TbcVlafrO3mtUu--6EhNJ4OG6LCK1w" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Rostro Abstracto</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Acuarela y técnica mixta sobre papel Arches</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$20.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Reel Indicators -->
+<div class="flex items-center justify-center gap-4 mt-4">
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: -300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_left</span>
+</button>
+<div class="flex gap-1.5">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: 300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Category: Lápiz y Lapicero -->
+<div class="category-section py-12 relative" id="cat-lapiz">
+<div class="flex items-center gap-4 mb-10">
+<div class="h-px flex-grow bg-white/10"></div>
+<h3 class="text-2xl font-black text-primary uppercase tracking-widest" style="">Colección Lápiz y Lapicero</h3>
+<div class="h-px flex-grow bg-white/10"></div>
+</div>
+<div class="relative group">
+<div class="art-carousel flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-4 -mx-4 items-stretch">
+<!-- Artwork 1: Vínculo Natural -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Vínculo Natural" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ujpbu5MqFJIVZJU_BGsFMoOaoocDz7BsXteL2p-GKAV7O9wXDsjOgUvmbZwgtzKYT-JPlKYFGnTyNF_SiTc4ZNIryRvcUw-abjUEnRoE9Thtg-HqF3h5SUrECNnl-4ahYpQKxCyqydIH3nSyRSFaeC-GMM9DdOPg6r07DJzBA-UV06Mj8oeZg4V2cEjGLHK3dXqLwtFjIj6D6PNyh3mgz2oRjwVS4ZlzI3GL_Qenf5d6D-tTYIlLUuj3UgsgXxB5O3MqaIMVO5-_Q" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Vínculo Natural</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Dibujo a lápiz sobre papel</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$50.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                        Comprar por WhatsApp
+                                    </a>
+</div>
+</div>
+</div>
+<!-- Artwork 2: Rostro -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Rostro" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ug_dPqTSpyFDN3kjBtSrqy46Wq9cL3NuqLovmdaxwigXIj3QvrfygNahVzDABcgM_1XfFV9Vkm46-HVldUFobrwShVqfAn07yQvEetK-uM_uAFZlnIw-VR_R5Yf-nEc854V0racGWBeTy1JWmS6Kc5fay6sin6_vsW0yeSJrrL5DzY-tdCwmb_U75EVj2ZHmrSkebqSPttEny1PcH1InnffmutonD6e6aP8fVEQAXdKrjTMyRxCVXVKcjc43UuDJ79u0FdCTtl-TQ" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Reflejo Profundo</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Técnica de grafito sobre papel</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$30.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                        Comprar por WhatsApp
+                                    </a>
+</div>
+</div>
+</div>
+<!-- Artwork 3: Estilo Anime -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Estilo Anime" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0ugF-DFjX7edrRR6uyTuxyBzWpVFqso2U4TTvLxiDZvAaXDxmOzdGygwykjiyl_qsfOI3ArK8vHo_AUivQbPDlmta9lipXV2c2GK2n-BlgKyOCMcnxusoysNTxWD3VQXhMhpeLvez1eqE2nCWgszqjld3UTuMk__qcqf3zK4cJIpIr5AWYNCfZsHadzAhMMZ3eXzYzMtOQPWs-cI1S2bPps6DxAL1QoiUrqfxA8_nHTHPe4BsPBxaqyGBpgTUjVEPB5ky4F4NQCJ" style="">
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Lineas de Identidad</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Ilustración a lapicero sobre papel</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$50.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                        Comprar por WhatsApp
+                                    </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Reel Indicators -->
+<div class="flex items-center justify-center gap-4 mt-4">
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: -300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_left</span>
+</button>
+<div class="flex gap-1.5">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: 300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Category: Óleo -->
+<div class="category-section py-12 relative" id="cat-oleo">
+<div class="flex items-center gap-4 mb-10">
+<div class="h-px flex-grow bg-white/10"></div>
+<h3 class="text-2xl font-black text-primary uppercase tracking-widest" style="">COLECCIÓN A ÓLEO</h3>
+<div class="h-px flex-grow bg-white/10"></div>
+</div>
+<div class="relative group">
+<div class="art-carousel flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-4 -mx-4 items-stretch">
+<!-- Artwork 1 -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="La Noche Estrellada" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0uh4hy5wFPZwMPLtbSdyXDb57Q5VJr0GdJGhffLYoHMy5mUT3hBbF0HuDw5JYc0dPsULcgdBOijIdv8SWZj3f7v0L-sp18mnNAguqrFmM6oDcBGuy8bJRSuy6DILa2tvdnioC32bVuWJXhERbQTcQLZtOy6wg6Iuf69m8fNUcUiXL2nQwowK_epGtGmfCuWxrdKXhDK8XZTM4jtFm2Q1iWRCLiJkFqVt7I8wXh9pSsscMHoIcA-nXF-4HbmCYRsLrtwvSgSQz_GaNw" style="">
+<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-white" style="">Óleo</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">La Noche Estrellada</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Interpretación expresiva en técnica de óleo sobre lienzo.</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$70.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+<!-- Artwork 2 -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="El Lobo de Wall Street" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0uiQ4N7xBgyvS-NBdJ4NwcEH4f3viNK2admtqYUlTFK5uKeBjHjYaA5Gh2NZrDdh5ZwWYMq7xsZh00zE2Nl5qADwzNFyNR9QWhPDfa6NwxFHsPdbfWQzT9Gz6FZX4i11YWLuWr6u03X4aWajrM1iqqbUK3vSJBzqBOxMuRQmuQyGH7NJ4yrXI03usF1-gwhxPBCaXfxY1GFMjKmI8ow9ygqoSc7P4zeKlDT8QCG1vNLW5MjvSsUMZnFnU8H4TmxYlSFjiOfvYWQdTQ" style="">
+<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-white" style="">Óleo</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">El Lobo de Wall Street</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Retrato expresivo en técnica de óleo sobre lienzo</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$50.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+<!-- Artwork 3 -->
+<div class="art-card-snap group bg-white/5 rounded-xl overflow-hidden border border-white/10 transition-all hover:shadow-2xl flex flex-col">
+<div class="relative aspect-[4/5] overflow-hidden">
+<img alt="Esencia Natural" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ADBb0uh2RehgiOnmp8LSTIQl0-wpnU45MXyxZV25Tmzi9IaAEsbOyKcyv2JXGP8mtmhtEDwoGx1AXCeFPNF_h_JM6xAh7kWXs4EfFmRKrKfIlQxL_SimpEy1P2CJUPd3C5nl6YPvy8JP0PjOg-o59F_9rQ1xpZNu0NPKwyfn6GBm8KwDhI7fe7eLLMp4g_r4p5TpWGMISPUHbKEkN7L2KRD2-Y7BKc3yBKD4-ZTfNnPJ9oQ1gNqbyCLQpA2i-HHdrrwKGfpjYtBtX4B2Ww" style="">
+<div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-white" style="">Óleo</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-white" style="">Esencia Natural</h3>
+<p class="text-white/60 text-sm mb-4 italic" style="">Óleo sobre lienzo con espátula y pincel.</p>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-6">
+<span class="text-2xl font-black text-primary" style="">$20.00</span>
+</div>
+<a class="flex items-center justify-center gap-2 w-full py-3 bg-primary hover:bg-brand-pink text-white rounded-lg font-bold transition-all shadow-lg shadow-primary/20" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-lg" style="">chat</span>
+                                            Comprar por WhatsApp
+                                        </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Reel Indicators -->
+<div class="flex items-center justify-center gap-4 mt-4">
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: -300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_left</span>
+</button>
+<div class="flex gap-1.5">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/40 hover:text-primary hover:bg-white/20 transition-all" onclick="this.parentElement.previousElementSibling.scrollBy({left: 300, behavior: 'smooth'})" style="">
+<span class="material-symbols-outlined" style="">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Artist Section -->
+<section class="py-24 bg-black/40" id="artista">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex flex-col lg:flex-row items-center gap-16">
+<div class="lg:w-1/2 relative">
+<div class="absolute -top-6 -left-6 w-full h-full bg-primary/20 rounded-xl"></div>
+<img alt="Retrato del artista" class="relative z-10 w-full h-auto rounded-xl shadow-2xl" src="https://lh3.googleusercontent.com/aida/ADBb0ui_gB4S1-jc26zDGErs-Vtx-eFI9UItKPpsAceiJz4sxAdmuzPv8Vrt2z2dl1g2fVrDyqa6se8fWAvmS6Pngf19l81x1fENLA4PbBXKSYOBV6AXD-rIhoyz8ZRo-gGytRSS8nmeYPuFfqwRSwSJEVas0Di18Eg0b8q-aPGIlfQiJxzjF8XjWgMRLr6z-hoKmV39iPiKF9UmzEFfLzHvOtXr0QBjsDZera9bAiu1Q2Qk5caPebOYARszykgfmOck1eb9_Vy__3Y-" style="">
+</div>
+<div class="lg:w-1/2">
+<span class="text-primary font-bold uppercase tracking-widest text-sm mb-4 block" style="">Sobre el artista</span>
+<h2 class="text-4xl font-black mb-8 leading-tight text-white" style="">Betsi Carhuamaca</h2>
+<div class="space-y-6 text-white/80 text-lg leading-relaxed">
+<p class="" style="">Soy una artista visual peruana cuya obra converge en el dominio del lápiz, la acuarela y el óleo. Desde mi infancia, he explorado la alquimia de la naturaleza, utilizando pigmentos orgánicos para dar vida a mis primeras creaciones.</p>
+<p class="" style="">Mi enfoque trasciende lo puramente estético: es una exploration introspectiva donde integro principios de física cuántica para materializar conceptos abstractos en realidades tangibles.</p>
+<p class="" style="">Concibo cada una de mis piezas como un canal de mensajes implícitos, diseñados para resonar con el espectador en un plano consciente y espiritual. Para mí, pintar no es solo representar la realidad, sino manifestar una visión del mundo donde la ciencia y el arte se entrelazan.</p>
+<div class="flex gap-8 pt-4">
+<div>
+<p class="text-primary text-3xl font-black" style="">200+</p>
+<p class="text-sm font-semibold uppercase tracking-tighter text-white" style="">Obras Vendidas</p>
+</div>
+<div>
+<p class="text-primary text-3xl font-black" style="">10</p>
+<p class="text-sm font-semibold uppercase tracking-tighter text-white" style="">Exposiciones</p>
+</div>
+<div>
+<p class="text-primary text-3xl font-black" style="">8</p>
+<p class="text-sm font-semibold uppercase tracking-tighter text-white" style="">Premios</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-black/60 border-t border-white/10 pt-20 pb-10">
+<div class="max-w-7xl mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="md:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-3xl" style="">palette</span>
+<h2 class="text-2xl font-extrabold tracking-tight text-white" style="">BYArt</h2>
+</div>
+<p class="text-white/60 max-w-sm mb-8 leading-relaxed" style="">
+                        Transformando espacios a través del arte contemporáneo y la expresión auténtica. Piezas exclusivas y encargos personalizados.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-white" href="https://facebook.com/betsi carhuamaca" title="Facebook" style="">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-white" href="https://instagram.com/betsi_c7" title="Instagram" style="">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-white transition-all text-white" href="https://tiktok.com/@betsi_c7" title="TikTok" style="">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.03 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.33-.52.34-.84.89-.91 1.5-.02.43.11.86.37 1.2.3.43.79.7 1.28.81.42.1.85.11 1.28.04 1.2-.21 2.15-1.12 2.37-2.31.11-1.06.02-2.13.04-3.19.01-4.14-.01-8.28.01-12.41z"></path></svg>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6 uppercase text-sm tracking-widest text-white" style="">Navegación</h4>
+<ul class="space-y-4 text-white/60">
+<li class="" style=""><a class="hover:text-primary transition-colors" href="#obras" style="">Colección Actual</a></li>
+<li class="" style=""><a class="hover:text-primary transition-colors" href="#" style="">Cómo Comprar</a></li>
+<li class="" style=""><a class="hover:text-primary transition-colors" href="#" style="">Envíos Internacionales</a></li>
+<li class="" style=""><a class="hover:text-primary transition-colors underline decoration-primary/50 underline-offset-4" href="/terminos" rel="noopener noreferrer" target="_blank" style="">Términos y Condiciones</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 uppercase text-sm tracking-widest text-white" style="">Contacto</h4>
+<ul class="space-y-4 text-white/60">
+<li class="flex items-start gap-3" style="">
+<span class="material-symbols-outlined text-primary text-lg" style="">location_on</span>
+<span class="" style="">Avenida Arequipa, Lince-Lima - Peru</span>
+</li>
+<li class="flex items-center gap-3" style="">
+<span class="material-symbols-outlined text-primary text-lg" style="">call</span>
+<span class="" style="">+51 925640652</span>
+</li>
+<li class="flex items-center gap-3" style="">
+<span class="material-symbols-outlined text-primary text-lg" style="">schedule</span>
+<span class="" style="">Lun - Vie: 10:00 - 17:00</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+<p class="" style="">© 2024 Galería de Arte Contemporáneo. Todos los derechos reservados.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#" style="">Política de Privacidad</a>
+<a class="hover:text-primary transition-colors" href="#" style="">Aviso Legal</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Floating Action Button -->
+<a class="fixed bottom-8 right-8 z-50 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer animate-pulse-subtle" href="https://wa.me/51925640652" style="">
+<span class="material-symbols-outlined text-3xl" style="">chat</span>
+</a>
+</body></html>
